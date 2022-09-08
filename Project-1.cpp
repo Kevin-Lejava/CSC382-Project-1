@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <ctime>
+#include <map>
 using namespace std;
 
 int FiboR(int n) // array of size n
@@ -13,9 +14,16 @@ int FiboR(int n) // array of size n
 }
 
 int MODFiboR(int n) {
+    static map<int, int> values;
     if (n == 0 || n == 1)
-        return (n);
-    else return (FiboR(n - 1) + FiboR(n - 2));
+        return n;
+    map<int, int>::iterator iter = values.find(n);
+
+    if (iter == values.end())
+        return values[n] = MODFiboR(n - 1) + MODFiboR(n - 2);
+    
+    else
+        return iter->second;
 }
 
 int FiboNR(int n) // array of size n
@@ -44,20 +52,21 @@ int main()
     
     for (int i = 0; i < 60; i++) {
         int fibValue = 0;
-        FiboNR(i);       
-        clock_t endFNR = clock();
-        double elapsedFNR = double(endFNR - startFNR) / CLOCKS_PER_SEC;
+        cout << arr[i] << "\t\t";
+
+        fibValue = FiboR(i);
+        clock_t endFR = clock();
+        cout << double(endFR - startFR) / CLOCKS_PER_SEC << "\t\t\t";
 
         MODFiboR(i);
         clock_t endMODFR = clock();
-        double elapsedMODFR = double(endMODFR - startMODFR) / CLOCKS_PER_SEC;
+        cout << double(endMODFR - startMODFR) / CLOCKS_PER_SEC << "\t\t";
 
-        fibValue = FiboR(i);
+        FiboNR(i);       
+        clock_t endFNR = clock();
+        cout << double(endFNR - startFNR) / CLOCKS_PER_SEC << "\t\t\t";
 
-        clock_t endFR = clock();
-        double elapsedFR = double(endFR - startFR) / CLOCKS_PER_SEC;
-
-       cout << arr[i] << "\t\t" << elapsedFR << "\t\t\t" << elapsedMODFR << "\t\t" << elapsedFNR << "\t\t\t" << fibValue << "\n";
+        cout << fibValue << "\n";
     }
 
     return 0;
